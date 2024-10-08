@@ -1,0 +1,74 @@
+﻿@{
+    var userId = Context.Session.GetInt32("UserId"); // Uzyskaj UserId z kontekstu
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - UserManagmentApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/UserManagmentApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="container navbar  navbar-expand-lg navbar-light border-bottom border-body bg-body-tertiary text-black-50">
+            <div class="container-fluid p-2">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (userId != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav me-0 mb-2 mb-lg-0">
+                        @if (userId != null)
+                        {
+                         <li class="nav-item m-1">
+                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Logout">Wyloguj</a>
+                            </li>
+                        }
+                        else
+                        {
+                        <li class="nav-item m-1">
+                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Login">Logowanie</a>
+                        </li>
+                        <li class="nav-item m-1">
+                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja</a>
+                        </li>
+                        }
+                       
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container ">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container mt-1">
+            &copy; 2024 - Inżynieria Oprogramowowania B - Projekt: Marek Pichniarczyk, Kacper Popko
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

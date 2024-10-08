@@ -1,0 +1,12 @@
+﻿@model UserManagmentApp.Models.User
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+
+<div class="container center">
+    <h2>Dashboard</h2>
+     <p>Username: @Model.UserName</p>
+     <p>Email: @Model.EmailAddress</p>
+     <p>UserType: @Model.UserType</p>
+</div>

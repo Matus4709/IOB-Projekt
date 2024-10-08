@@ -1,0 +1,27 @@
+﻿@model UserManagmentApp.Models.User
+@{
+    ViewData["Title"] = "Logowanie";
+}
+
+<main class="form-signin w-75 m-auto mt-5 mb-5">
+    <form asp-action="Login" class="w-50 m-auto" method="post">
+
+        <h1 class="h3 mb-3 fw-normal">Logowanie</h1>
+
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" name="userName" id="floatingInput" placeholder="Wprowadź nazwę użytkownika...">
+            <label for="floatingInput">Nazwa użytkownika</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Wprowadź hasło...">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 mt-2" type="submit">Zaloguj!</button>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger mt-2" role="alert">
+                @ViewBag.Error
+            </div>
+        }
+    </form>
+</main>

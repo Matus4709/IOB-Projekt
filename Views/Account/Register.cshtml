@@ -1,0 +1,25 @@
+﻿@model UserManagmentApp.Models.User
+@{
+    ViewData["Title"] = "Rejestracja";
+}
+
+<main class="form-signin w-75 m-auto mt-5 mb-5">
+    <form asp-action="Register" class="w-50 m-auto" method="post">
+
+        <h1 class="h3 mb-3 fw-normal">Rejestracja</h1>
+
+        <div class="form-floating mt-2">
+            <input type="email" class="form-control" id="floatingInput" placeholder="Wprowadź adres email..." asp-for="EmailAddress" />
+            <label asp-validation-for="EmailAddress" for="floatingInput">E-Mail</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź nazwę użytkownika..." asp-for="UserName" />
+            <label asp-validation-for="UserName" for="floatingInput">Nazwa użytkownika</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="password" class="form-control" id="floatingInput" placeholder="Wprowadź hasło..." asp-for="Password" />
+            <label asp-validation-for="Password" for="floatingInput">Hasło</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2 mt-2" type="submit">Zarejestruj się!</button>
+    </form>
+</main>
