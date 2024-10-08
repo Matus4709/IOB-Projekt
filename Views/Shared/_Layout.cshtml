@@ -29,23 +29,23 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Products">Produkty</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav me-0 mb-2 mb-lg-0">
                         @if (userId != null)
                         {
                          <li class="nav-item m-1">
-                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Logout">Wyloguj</a>
+                            <a class="nav-link btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Logout">Wyloguj</a>
                             </li>
                         }
                         else
                         {
                         <li class="nav-item m-1">
-                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Login">Logowanie</a>
+                            <a class="nav-link btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Login">Logowanie</a>
                         </li>
                         <li class="nav-item m-1">
-                            <a class="nav-link text-dark btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja</a>
+                            <a class="nav-link btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja</a>
                         </li>
                         }
                        
@@ -59,12 +59,13 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container mt-1">
-            &copy; 2024 - Inżynieria Oprogramowowania B - Projekt: Marek Pichniarczyk, Kacper Popko
-        </div>
-    </footer>
+    <div class="container">
+        <footer class="py-3 my-4">
+            <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+</ul>
+            <p class="text-center text-body-secondary">&copy; 2024 - Inżynieria Oprogramowowania B - Projekt: Marek Pichniarczyk, Kacper Popko</p>
+        </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
