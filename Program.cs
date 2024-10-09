@@ -3,11 +3,12 @@ using UserManagmentApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Konfiguracja bazy danych
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 21))));
 
-// Add services to the container.
+// Dodanie us³ug do kontenera
 builder.Services.AddControllersWithViews();
 
 // Konfiguracja sesji
@@ -18,14 +19,12 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
-
 var app = builder.Build();
-app.UseSession(); // Dodanie sesji do middleware
-// Configure the HTTP request pipeline.
+
+// Konfiguracja pipeline'u HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -33,6 +32,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+// Dodanie sesji do middleware
+app.UseSession(); // To jest w³aœciwe miejsce dla u¿ywania sesji w middleware
 
 app.UseAuthorization();
 

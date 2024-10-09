@@ -10,6 +10,7 @@ namespace UserManagmentApp.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+
         public AccountController(ApplicationDbContext context)
         {
             _context = context;
@@ -26,6 +27,7 @@ namespace UserManagmentApp.Controllers
             }
             return RedirectToAction("Dashboard");
         }
+
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -60,7 +62,7 @@ namespace UserManagmentApp.Controllers
 
         // POST: Account/Login
         [HttpPost]
-        [ValidateAntiForgeryToken] // Dodaj walidację CSRF
+        [ValidateAntiForgeryToken]
         public IActionResult Login(string userName, string password)
         {
             // Znajdź użytkownika po nazwie użytkownika
@@ -75,13 +77,17 @@ namespace UserManagmentApp.Controllers
                 {
                     // Ustaw sesję użytkownika
                     HttpContext.Session.SetInt32("UserId", user.Id);
-                    return RedirectToAction("Dashboard", "Account");
+                    HttpContext.Session.SetString("UserType", user.UserType);
+                    HttpContext.Session.SetString("WelcomeMessage", $"Witamy {user.UserName}!"); // Ustawienie komunikatu powitalnego
+
+                    return RedirectToAction("Index", "Home"); // Przekierowanie do głównej strony
                 }
             }
 
-            ViewBag.Error = "Invalid login attempt";
+            ViewBag.Error = "Nieprawidłowe dane logowania";
             return View();
         }
+
         // GET: Dashboard
         public IActionResult Dashboard()
         {
@@ -90,9 +96,22 @@ namespace UserManagmentApp.Controllers
             {
                 return RedirectToAction("Login");
             }
+
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
-            return View(user);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Sprawdzamy typ użytkownika i przekierowujemy na odpowiedni widok
+            if (user.UserType == "admin")
+            {
+                return View("AdminDashboard", user); // Widok dla admina
+            }
+
+            return View("UserDashboard", user); // Widok dla zwykłego użytkownika
         }
+
         // GET: Logout
         public IActionResult Logout()
         {

@@ -1,6 +1,31 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="container">
+
+            <div class="inner ">
+                <h1 class="cover-heading">Hurtownia Sprzętu Komputerowego.</h1>
+                <p class="lead">Zaopatrz swój sklep, biuro, szkołę w najlepsze wyposażenie dostępne na rynku.</p>
+
+                <!-- Komunikat powitalny -->
+                @if (!string.IsNullOrEmpty(ViewBag.WelcomeMessage))
+                {
+                    <div class="alert alert-success" id="welcomeMessage">
+                        @ViewBag.WelcomeMessage
+                    </div>
+                }
+
+                <p class="lead">
+                    <a class="btn btn-lg btn-dark" asp-area="" asp-controller="Home" asp-action="Products">Sprawdź produkty!</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <style>
 /*
  * Globals
@@ -21,6 +46,15 @@ a:hover {
   text-shadow: none; /* Prevent inheritence from `body` */
   background-color: #fff;
   border: 1px solid #fff;
+}
+
+.alert {
+    opacity: 1;
+    transition: opacity 1s ease-in-out; /* Płynne przejście */
+}
+
+.alert.fade-out {
+    opacity: 0; /* Ukrycie komunikatu */
 }
 
 
@@ -141,22 +175,29 @@ body {
 
 </style>
 
-    <div class="site-wrapper">
+<style>
+    .alert {
+        opacity: 1;
+        transition: opacity 1s ease-in-out; /* Płynne przejście */
+    }
 
-      <div class="site-wrapper-inner">
+        .alert.fade-out {
+            opacity: 0; /* Ukrycie komunikatu */
+        }
+</style>
 
-        <div class="container">
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        if (welcomeMessage) {
+            setTimeout(() => {
+                welcomeMessage.classList.add('fade-out'); // Dodanie klasy, która sprawi, że komunikat zniknie
+            }, 5000); // Czekaj 5000 ms (5 sekund)
 
-          <div class="inner ">
-            <h1 class="cover-heading">Hurtownia Sprzętu Komputerowego.</h1>
-            <p class="lead">Zaopatrz swój sklep, biuro, szkołę w najlepsze wyposażenie dostępne na rynku.</p>
-            <p class="lead">
-            <a class="btn btn-lg btn-dark" asp-area="" asp-controller="Home" asp-action="Products">Sprawdź produkty!</a>
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </div>
+            // Opcjonalnie, usunięcie elementu po zakończeniu animacji
+            welcomeMessage.addEventListener('transitionend', () => {
+                welcomeMessage.style.display = 'none'; // Ukrycie elementu po animacji
+            });
+        }
+    });
+</script>

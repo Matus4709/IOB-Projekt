@@ -16,6 +16,12 @@ namespace UserManagmentApp.Controllers
 
         public IActionResult Index()
         {
+            var welcomeMessage = HttpContext.Session.GetString("WelcomeMessage");
+            ViewBag.WelcomeMessage = welcomeMessage; // Przekazanie komunikatu do widoku
+
+            // Wyczyszczenie komunikatu po wyœwietleniu, aby nie by³ widoczny przy odœwie¿eniu
+            HttpContext.Session.Remove("WelcomeMessage");
+
             return View();
         }
 
