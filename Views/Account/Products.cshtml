@@ -3,12 +3,17 @@
     ViewData["Title"] = "Produkty";
 }
 
-<h2>Produkty</h2>
+<div class="d-inline-flex d-flex p-2">
+     <h2>Produkty</h2>
+    @if (Model != null && Model.UserType == "Admin")
+    {
+        <button class="btn ms-3 btn-success">Dodaj produkt</button>
+    }
+</div>
 
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
-
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
 
@@ -21,6 +26,11 @@
                             <div class="btn-group">
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Pokaż</button>
                                 <button type="button" class="btn btn-sm btn-outline-secondary">Dodaj do koszyka</button>
+                                @if (Model != null && Model.UserType == "Admin")
+                                {
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Edytuj</button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary">Usuń</button>
+                                }
                             </div>
                             <small class="text-body-secondary">120 PLN</small>
                         </div>

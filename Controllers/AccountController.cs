@@ -99,5 +99,19 @@ namespace UserManagmentApp.Controllers
             HttpContext.Session.Remove("UserId");
             return RedirectToAction("Login");
         }
+
+        [Route("/products")]
+        // GET: Products
+        [HttpGet]
+        public IActionResult Products()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return View();
+            }
+            return View(user);
+        }
     }
 }

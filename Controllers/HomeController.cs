@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using UserManagmentApp.Models;
@@ -19,12 +20,7 @@ namespace UserManagmentApp.Controllers
             return View();
         }
 
-        // GET: Products
-        [HttpGet]
-        public IActionResult Products()
-        {
-            return View();
-        }
+       
         public IActionResult Privacy()
         {
             return View();

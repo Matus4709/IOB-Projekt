@@ -29,7 +29,7 @@
                             </li>
                         }
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Products">Produkty</a>
+                            <a class="nav-link text-dark" href="/Products">Produkty</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav me-0 mb-2 mb-lg-0">
@@ -42,10 +42,10 @@
                         else
                         {
                         <li class="nav-item m-1">
-                            <a class="nav-link btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Login">Logowanie</a>
+                                <a class="btn btn-md btn-outline-secondary p-2" asp-area="" asp-controller="Account" asp-action="Login">Logowanie</a>
                         </li>
                         <li class="nav-item m-1">
-                            <a class="nav-link btn btn-outline-primary" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja</a>
+                                <a class="btn btn-md btn-outline-secondary p-2" asp-area="" asp-controller="Account" asp-action="Register">Rejestracja</a>
                         </li>
                         }
                        
