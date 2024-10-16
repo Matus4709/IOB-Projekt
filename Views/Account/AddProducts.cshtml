@@ -1,0 +1,44 @@
+﻿
+@model UserManagmentApp.Models.Products;
+@{
+    ViewData["Title"] = "Dodawanie produktu";
+}
+
+<main class="form-signin w-75 m-auto mt-5 mb-5">
+    <form asp-action="AddProducts" enctype="multipart/form-data" class="w-50 m-auto" method="post">
+
+        <h1 class="h3 mb-3 fw-normal">Dodaj produkt</h1>
+
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź nazwe" asp-for="ProductName" />
+            <label asp-validation-for="ProductName" for="floatingInput">Nazwa produktu</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź opis" asp-for="Description" />
+            <label asp-validation-for="Description" for="floatingInput">Opis</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź kategorię" asp-for="Category" />
+            <label asp-validation-for="Category" for="floatingInput">Kategoria</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź cene za sztukę" asp-for="Price" />
+            <label asp-validation-for="Price" for="floatingInput">Cena za szt</label>
+        </div>
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź wprowadź stan magazynowy" asp-for="StockQuantity" />
+            <label asp-validation-for="StockQuantity" for="floatingInput">Stan magazynowy</label>
+        </div>
+        <div class="form-check mt-2">
+            <input type="checkbox" class="form-check-input" id="isDiscontinued" asp-for="IsDiscontinued" />
+            <label class="form-check-label" asp-for="IsDiscontinued" for="isDiscontinued">Dostępność w ofercie hurtowni</label>
+        </div>
+
+        <div class="form-floating mt-2">
+            <input type="text" class="form-control" id="floatingInput" placeholder="Wprowadź link do obrazu" asp-for="ImagePath" />
+            <label asp-validation-for="ImagePath" for="floatingInput">Link do obrazu:</label>
+        </div>
+
+        <button class="btn btn-md btn-outline-secondary  w-100 py-2 mt-2" type="submit">Dodaj produkt!</button>
+    </form>
+</main>

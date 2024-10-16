@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using UserManagmentApp.Data;
 using UserManagmentApp.Models;
@@ -10,9 +11,11 @@ namespace UserManagmentApp.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public AccountController(ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AccountController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = hostEnvironment;
         }
 
         // GET: Account/Register
@@ -99,19 +102,67 @@ namespace UserManagmentApp.Controllers
             HttpContext.Session.Remove("UserId");
             return RedirectToAction("Login");
         }
-
         [Route("/products")]
         // GET: Products
         [HttpGet]
-        public IActionResult Products()
+        public async Task<IActionResult> Products()
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            User user = null;
+
+            // Jeśli użytkownik jest zalogowany, pobierz jego dane
+            if (userId != null)
+            {
+                user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            }
+
+            // Pobierz listę produktów
+            var products = await _context.Products.ToListAsync();
+
+            // Tworzymy obiekt ViewModel zawsze, niezależnie od tego, czy użytkownik jest zalogowany
+            var viewModel = new ProductViewModel
+            {
+                User = user,  // Może być null, jeśli użytkownik nie jest zalogowany
+                products = products
+            };
+
+            return View(viewModel);
+        }
+
+
+        private IActionResult View(User user, List<Products> products)
+        {
+            throw new NotImplementedException();
+        }
+
+        [Route("/products/AddProducts")]
+        // GET: Products/AddProductsGet
+        [HttpGet]
+
+        public IActionResult AddProducts()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (user == null)
             {
-                return View();
+                return RedirectToAction("Login");
             }
-            return View(user);
+            return View();
+        }
+        [Route("/products/AddProducts")]
+        // POST: Products/AddProducts
+        [HttpPost]
+        public async Task<IActionResult> AddProducts(Products products)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+                await _context.AddAsync(products);
+                await _context.SaveChangesAsync();
+                return View();
         }
     }
 }
