@@ -4,16 +4,12 @@
 }
 
 <div class="d-inline-flex d-flex p-2">
-     <h2>Produkty</h2>
-    @if (Model.User != null)
+    <h2>Produkty</h2>
+    @if (Model.User != null && Model.User.UserType == "Admin")
     {
-        if (Model.User.UserType == "Admin")
-        {
             <a href="/Products/AddProducts" class="btn ms-3 btn-success">Dodaj produkt</a>
-        }
     }
 </div>
-
 
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
@@ -23,32 +19,29 @@
             {
                 if (product.IsDiscontinued == false)
                 {
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="@product.ImagePath" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="@product.ProductName" />
-                            <div class="card-body">
-                                <p class="card-text">@product.ProductName</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="btn-group">
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Pokaż</button>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Dodaj do koszyka</button>
-                                        @if (Model.User != null)
+                            <div class="col">
+                                <div class="card shadow-sm">
+                                    <img src="@product.ImagePath" class="bd-placeholder-img card-img-top" width="100%" height="225" alt="@product.ProductName" />
+                                    <div class="card-body">
+                                        <p class="card-text">@product.ProductName</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="btn-group">
+                                                <a href="/products/Details/@product.ProductId" class="btn btn-sm btn-outline-secondary">Pokaż</a>
+                                        @if (Model.User != null && Model.User.UserType == "Admin")
                                         {
-                                            if (Model.User.UserType == "Admin")
-                                            {
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Edytuj</button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary">Usuń</button>
-                                            }
+                                                        <a href="/products/EditProduct/@product.ProductId" class="btn btn-sm btn-outline-secondary">Edytuj</a>
+                                                        <form action="/products/DeleteProductConfirmed/@product.ProductId" method="post" style="display:inline;">
+                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Usuń</button>
+                                                        </form>
                                         }
+                                            </div>
+                                            <small class="text-body-secondary">@product.Price PLN</small>
+                                        </div>
                                     </div>
-                                    <small class="text-body-secondary">@product.Price PLN</small>
                                 </div>
                             </div>
-                        </div>
-                    </div>
                 }
             }
-
         </div>
     </div>
 </div>

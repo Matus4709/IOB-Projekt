@@ -1,0 +1,23 @@
+﻿@model UserManagmentApp.Models.Products
+
+@{
+    ViewData["Title"] = "Edytuj produkt";
+}
+
+<h2>Edytuj produkt</h2>
+
+<form asp-action="EditProduct" asp-route-productId="@Model.ProductId" method="post">
+    <div class="form-group">
+        <label for="ProductName">Nazwa produktu</label>
+        <input type="text" class="form-control" id="ProductName" name="ProductName" value="@Model.ProductName" required />
+    </div>
+    <div class="form-group">
+        <label for="Price">Cena</label>
+        <input type="number" class="form-control" id="Price" name="Price" value="@Model.Price" step="0.01" required />
+    </div>
+    <div class="form-group">
+        <label for="StockQuantity">Ilość na stanie</label>
+        <input type="number" class="form-control" id="StockQuantity" name="StockQuantity" value="@Model.StockQuantity" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+</form>

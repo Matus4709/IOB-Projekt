@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 using UserManagmentApp.Data;
 using UserManagmentApp.Models;
 
@@ -12,6 +13,7 @@ namespace UserManagmentApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
+
         public AccountController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
@@ -29,6 +31,7 @@ namespace UserManagmentApp.Controllers
             }
             return RedirectToAction("Dashboard");
         }
+
         // POST: Account/Register
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -36,11 +39,8 @@ namespace UserManagmentApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Użycie PasswordHasher do zahashowania hasła
                 var passwordHasher = new PasswordHasher<User>();
                 user.Password = passwordHasher.HashPassword(user, user.Password);
-
-                // Dodaj użytkownika do bazy danych
                 _context.Users.Add(user);
                 _context.SaveChanges();
 
@@ -63,20 +63,17 @@ namespace UserManagmentApp.Controllers
 
         // POST: Account/Login
         [HttpPost]
-        [ValidateAntiForgeryToken] // Dodaj walidację CSRF
+        [ValidateAntiForgeryToken]
         public IActionResult Login(string userName, string password)
         {
-            // Znajdź użytkownika po nazwie użytkownika
             var user = _context.Users.FirstOrDefault(u => u.UserName == userName);
             if (user != null)
             {
-                // Weryfikacja hasła hashowanego
                 var passwordHasher = new PasswordHasher<User>();
                 var result = passwordHasher.VerifyHashedPassword(user, user.Password, password);
 
                 if (result == PasswordVerificationResult.Success)
                 {
-                    // Ustaw sesję użytkownika
                     HttpContext.Session.SetInt32("UserId", user.Id);
                     return RedirectToAction("Dashboard", "Account");
                 }
@@ -85,6 +82,7 @@ namespace UserManagmentApp.Controllers
             ViewBag.Error = "Invalid login attempt";
             return View();
         }
+
         // GET: Dashboard
         public IActionResult Dashboard()
         {
@@ -96,12 +94,14 @@ namespace UserManagmentApp.Controllers
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
             return View(user);
         }
+
         // GET: Logout
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("UserId");
             return RedirectToAction("Login");
         }
+
         [Route("/products")]
         // GET: Products
         [HttpGet]
@@ -110,35 +110,25 @@ namespace UserManagmentApp.Controllers
             var userId = HttpContext.Session.GetInt32("UserId");
             User user = null;
 
-            // Jeśli użytkownik jest zalogowany, pobierz jego dane
             if (userId != null)
             {
                 user = _context.Users.FirstOrDefault(u => u.Id == userId);
             }
 
-            // Pobierz listę produktów
             var products = await _context.Products.ToListAsync();
 
-            // Tworzymy obiekt ViewModel zawsze, niezależnie od tego, czy użytkownik jest zalogowany
             var viewModel = new ProductViewModel
             {
-                User = user,  // Może być null, jeśli użytkownik nie jest zalogowany
+                User = user,
                 products = products
             };
 
             return View(viewModel);
         }
 
-
-        private IActionResult View(User user, List<Products> products)
-        {
-            throw new NotImplementedException();
-        }
-
         [Route("/products/AddProducts")]
-        // GET: Products/AddProductsGet
+        // GET: Products/AddProducts
         [HttpGet]
-
         public IActionResult AddProducts()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
@@ -149,6 +139,7 @@ namespace UserManagmentApp.Controllers
             }
             return View();
         }
+
         [Route("/products/AddProducts")]
         // POST: Products/AddProducts
         [HttpPost]
@@ -160,9 +151,126 @@ namespace UserManagmentApp.Controllers
             {
                 return RedirectToAction("Login");
             }
-                await _context.AddAsync(products);
-                await _context.SaveChangesAsync();
-                return View();
+
+            await _context.AddAsync(products);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Products");
         }
+
+        // GET: Products/Edit/5
+        [HttpGet]
+        [Route("/products/EditProduct/{productId}")]
+        public async Task<IActionResult> EditProduct(int productId)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // POST: Products/Edit/5
+        [HttpPost]
+        [Route("/products/EditProduct/{productId}")]
+        public async Task<IActionResult> EditProduct(int productId, Products updatedProduct)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            if (productId != updatedProduct.ProductId)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(updatedProduct);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!_context.Products.Any(p => p.ProductId == productId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("Products");
+            }
+            return View(updatedProduct);
+        }
+
+        // GET: Products/Delete/5
+        [HttpGet]
+        [Route("/products/DeleteProduct/{productId}")]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
+
+        // POST: Products/Delete/5
+        [HttpPost, ActionName("DeleteProduct")]
+        [Route("/products/DeleteProductConfirmed/{productId}")]
+        public async Task<IActionResult> DeleteProductConfirmed(int productId)
+        {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var product = await _context.Products.FindAsync(productId);
+            if (product != null)
+            {
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Products");
+        }
+        [HttpGet]
+        [Route("/products/Details/{productId}")]
+        public async Task<IActionResult> Details(int productId)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product); // Otwiera widok ze szczegółami produktu
+        }
+
     }
 }
