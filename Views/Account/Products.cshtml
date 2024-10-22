@@ -14,10 +14,9 @@
 <div class="album py-5 bg-body-tertiary">
     <div class="container">
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
             @foreach (var product in Model.products)
             {
-                if (product.IsDiscontinued == false)
+                if (!product.IsDiscontinued)
                 {
                             <div class="col">
                                 <div class="card shadow-sm">
@@ -26,18 +25,33 @@
                                         <p class="card-text">@product.ProductName</p>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="btn-group">
-                                                <a href="/products/Details/@product.ProductId" class="btn btn-sm btn-outline-secondary">Pokaż</a>
+                                                <!-- Przycisk pokazujący szczegóły produktu -->
+                                                <a href="/Products/Details/@product.ProductId" class="btn btn-sm btn-outline-secondary">Pokaż</a>
+
+                                                <!-- Przycisk dodający do koszyka (może być pusty w tej chwili) -->
+                                                <button type="button" class="btn btn-sm btn-outline-secondary">Dodaj do koszyka</button>
+
                                         @if (Model.User != null && Model.User.UserType == "Admin")
                                         {
-                                                        <a href="/products/EditProduct/@product.ProductId" class="btn btn-sm btn-outline-secondary">Edytuj</a>
-                                                        <form action="/products/DeleteProductConfirmed/@product.ProductId" method="post" style="display:inline;">
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger">Usuń</button>
-                                                        </form>
+                                                        <!-- Przycisk edycji produktu -->
+                                                        <a href="/Products/EditProduct/@product.ProductId" class="btn btn-sm btn-outline-secondary">Edytuj</a>
+
+                                                        <!-- Przycisk usunięcia produktu -->
+                                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="showConfirmation('@product.ProductId')">Usuń</button>
                                         }
                                             </div>
                                             <small class="text-body-secondary">@product.Price PLN</small>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!-- Sekcja z komunikatem o potwierdzeniu usunięcia -->
+                                <div id="delete-confirmation-@product.ProductId" class="delete-confirmation" style="display: none;">
+                                    <p>Czy na pewno chcesz usunąć produkt "@product.ProductName"?</p>
+                                    <form method="post" action="/Products/DeleteProductConfirmed/@product.ProductId">
+                                        <button type="submit" class="btn btn-sm btn-danger">Tak, usuń</button>
+                                        <button type="button" class="btn btn-sm btn-secondary" onclick="hideConfirmation('@product.ProductId')">Nie</button>
+                                    </form>
                                 </div>
                             </div>
                 }
@@ -45,3 +59,14 @@
         </div>
     </div>
 </div>
+
+<!-- Skrypt JS do pokazania/ukrycia sekcji potwierdzenia -->
+<script>
+    function showConfirmation(productId) {
+        document.getElementById('delete-confirmation-' + productId).style.display = 'block';
+    }
+
+    function hideConfirmation(productId) {
+        document.getElementById('delete-confirmation-' + productId).style.display = 'none';
+    }
+</script>

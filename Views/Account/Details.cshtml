@@ -1,12 +1,59 @@
 ﻿@model UserManagmentApp.Models.Products
-
 @{
     ViewData["Title"] = "Szczegóły produktu";
 }
 
-<h2>@Model.ProductName</h2>
-<p><strong>Cena:</strong> @Model.Price PLN</p>
-<p><strong>Kategoria:</strong> @Model.Category</p>
-<p><strong>Opis:</strong> @Model.Description</p>
-<p><strong>Ilość na stanie:</strong> @Model.StockQuantity</p>
-<a href="/products" class="btn btn-secondary">Powrót do listy produktów</a>
+<div class="container mt-5">
+    <!-- Górny pasek tytułu -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <h1 class="display-5">@Model.ProductName</h1>
+            <hr />
+        </div>
+    </div>
+
+    <!-- Główna sekcja ze szczegółami produktu -->
+    <div class="row">
+        <!-- Kolumna ze zdjęciem produktu -->
+        <div class="col-md-6">
+            <div class="product-image">
+                <img src="@Model.ImagePath" alt="@Model.ProductName" class="img-fluid rounded shadow-sm" style="max-width: 100%; height: auto;" />
+            </div>
+        </div>
+
+        <!-- Kolumna z danymi produktu -->
+        <div class="col-md-6">
+            <!-- Cena produktu -->
+            <h2 class="text-danger">@Model.Price PLN</h2>
+
+            <!-- Kategoria produktu -->
+            <p><strong>Kategoria:</strong> @Model.Category</p>
+
+            <!-- Opis produktu -->
+            <p><strong>Opis:</strong></p>
+            <p>@Model.Description</p>
+
+            <!-- Ilość na stanie -->
+            <p><strong>Ilość na stanie:</strong> @Model.StockQuantity</p>
+
+            <!-- Przyciski: Powrót do listy produktów i ew. inne -->
+            <div class="d-flex flex-column">
+                <a href="/products" class="btn btn-secondary mb-2">Powrót do listy produktów</a>
+                <button class="btn btn-primary">Dodaj do koszyka</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stylizacja inline (opcjonalna) -->
+<style>
+    .product-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        max-height: 450px;
+    }
+    .product-image img {
+        object-fit: cover;
+    }
+</style>
