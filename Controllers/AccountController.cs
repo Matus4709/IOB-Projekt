@@ -103,9 +103,8 @@ namespace UserManagmentApp.Controllers
         }
 
         [Route("/products")]
-        // GET: Products
         [HttpGet]
-        public async Task<IActionResult> Products()
+        public async Task<IActionResult> Products(int pageNumber = 1, int pageSize = 10)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             User user = null;
@@ -115,16 +114,30 @@ namespace UserManagmentApp.Controllers
                 user = _context.Users.FirstOrDefault(u => u.Id == userId);
             }
 
-            var products = await _context.Products.ToListAsync();
+            // Pobranie wszystkich produktów
+            var totalProducts = await _context.Products.CountAsync();
+
+            // Paginacja produktów - skip i take
+            var products = await _context.Products
+                                         .Skip((pageNumber - 1) * pageSize)
+                                         .Take(pageSize)
+                                         .ToListAsync();
+
+            // Liczba stron
+            var totalPages = (int)Math.Ceiling(totalProducts / (double)pageSize);
 
             var viewModel = new ProductViewModel
             {
                 User = user,
-                products = products
+                Products = products,
+                CurrentPage = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages
             };
 
             return View(viewModel);
         }
+
 
         [Route("/products/AddProducts")]
         // GET: Products/AddProducts
