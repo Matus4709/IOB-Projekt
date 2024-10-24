@@ -14,6 +14,13 @@
 <!-- Formularz wyszukiwania -->
 <form class="d-flex mb-3" method="get" action="/products">
     <input type="text" class="form-control me-2" name="searchQuery" value="@Model.SearchQuery" placeholder="Szukaj po nazwie...">
+    <select class="form-select me-2" name="selectedCategory">
+        <option value="">Wybierz kategorię</option>
+        @foreach (var category in Model.Categories)
+        {
+             <option value="@category">@category</option>
+        }
+    </select>
     <button type="submit" class="btn btn-outline-success">Szukaj</button>
 </form>
 

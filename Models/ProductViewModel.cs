@@ -12,6 +12,9 @@
 
         public string SearchQuery { get; set; }
 
+        public string SelectedCategory { get; set; } // Przechowuje wybraną kategorię
+        public List<string> Categories { get; set; } // Przechowuje dostępne kategorie
+
         public bool HasPreviousPage => CurrentPage > 1;
         public bool HasNextPage => CurrentPage < TotalPages;
     }

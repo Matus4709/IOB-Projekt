@@ -104,7 +104,7 @@ namespace UserManagmentApp.Controllers
 
         [Route("/products")]
         [HttpGet]
-        public async Task<IActionResult> Products(string searchQuery, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Products(string selectedCategory, string searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             User user = null;
@@ -121,6 +121,16 @@ namespace UserManagmentApp.Controllers
             {
                 productsQuery = productsQuery.Where(p => p.ProductName.Contains(searchQuery));
             }
+            // Filtrowanie produktów po kategorii
+            if (!string.IsNullOrEmpty(selectedCategory))
+            {
+                productsQuery = productsQuery.Where(p => p.Category == selectedCategory);
+            }
+            // Pobranie unikalnych kategorii do dropdowna
+            var categories = await _context.Products
+                                           .Select(p => p.Category)
+                                           .Distinct()
+                                           .ToListAsync();
 
             // Całkowita liczba produktów po wyszukiwaniu
             var totalProducts = await productsQuery.CountAsync();
@@ -141,7 +151,9 @@ namespace UserManagmentApp.Controllers
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
                 TotalPages = totalPages,
-                SearchQuery = searchQuery   // Przekazanie zapytania do widoku
+                SearchQuery = searchQuery,   // Przekazanie zapytania do widoku
+                SelectedCategory = selectedCategory, // Przekazanie wybranej kategorii do widoku
+                Categories = categories,
             };
 
             return View(viewModel);
