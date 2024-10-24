@@ -104,7 +104,7 @@ namespace UserManagmentApp.Controllers
 
         [Route("/products")]
         [HttpGet]
-        public async Task<IActionResult> Products(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Products(string searchQuery, int pageNumber = 1, int pageSize = 10)
         {
             var userId = HttpContext.Session.GetInt32("UserId");
             User user = null;
@@ -114,14 +114,22 @@ namespace UserManagmentApp.Controllers
                 user = _context.Users.FirstOrDefault(u => u.Id == userId);
             }
 
-            // Pobranie wszystkich produktów
-            var totalProducts = await _context.Products.CountAsync();
+            // Wyszukiwanie produktów po tytule (domyślnie pobieramy wszystkie produkty)
+            var productsQuery = _context.Products.AsQueryable();
 
-            // Paginacja produktów - skip i take
-            var products = await _context.Products
-                                         .Skip((pageNumber - 1) * pageSize)
-                                         .Take(pageSize)
-                                         .ToListAsync();
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                productsQuery = productsQuery.Where(p => p.ProductName.Contains(searchQuery));
+            }
+
+            // Całkowita liczba produktów po wyszukiwaniu
+            var totalProducts = await productsQuery.CountAsync();
+
+            // Paginacja produktów - skip i take na przefiltrowanych produktach
+            var products = await productsQuery
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             // Liczba stron
             var totalPages = (int)Math.Ceiling(totalProducts / (double)pageSize);
@@ -129,14 +137,16 @@ namespace UserManagmentApp.Controllers
             var viewModel = new ProductViewModel
             {
                 User = user,
-                Products = products,
+                Products = products,        // Przefiltrowane i paginowane produkty
                 CurrentPage = pageNumber,
                 PageSize = pageSize,
-                TotalPages = totalPages
+                TotalPages = totalPages,
+                SearchQuery = searchQuery   // Przekazanie zapytania do widoku
             };
 
             return View(viewModel);
         }
+
 
 
         [Route("/products/AddProducts")]
