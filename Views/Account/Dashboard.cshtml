@@ -4,9 +4,36 @@
 }
 
 
-<div class="container center">
-    <h2>Dashboard</h2>
-     <p>Username: @Model.UserName</p>
-     <p>Email: @Model.EmailAddress</p>
-     <p>UserType: @Model.UserType</p>
+<div class="container center ">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 mt-5">
+            <h2 class="">Twoje zamówienia: </h2>
+            <div class="w-25">
+                <p class="border-bottom w-25 mb-3"></p>
+            </div>
+            <table class="table table-bordered border-dark-subtle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="fw-bold">ID</th>
+                        <th scope="col" class="fw-bold">Data złożenia</th>
+                        <th scope="col" class="fw-bold">Wartość</th>
+                        <th scope="col" class="fw-bold">Status</th>
+                        <th scope="col" class="fw-bold">Opcje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>An item</td>
+                        <td>A second item</td>
+                        <td>A third item</td>
+                        <td>A third item</td>
+                        <td>A third item</td>
+                    </tr>
+                    <!-- Możesz dodać kolejne wiersze zamówień w ten sam sposób -->
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
 </div>
