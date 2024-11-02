@@ -42,7 +42,7 @@
                                         <a href="/Products/Details/@product.ProductId" class="btn btn-sm btn-outline-secondary">Pokaż</a>
 
                                         <!-- Przycisk dodający do koszyka (może być pusty w tej chwili) -->
-                                        <button type="button" class="btn btn-sm btn-outline-secondary">Dodaj do koszyka</button>
+                                        <button type="button" onclick="addToCart('@product.ProductId', '@product.ProductName', '@product.Price')" class="btn btn-sm btn-outline-secondary">Dodaj do koszyka</button>
 
                                         @if (Model.User != null && Model.User.UserType == "Admin")
                                         {
@@ -116,5 +116,29 @@
 
     function hideConfirmation(productId) {
         document.getElementById('delete-confirmation-' + productId).style.display = 'none';
+    }
+</script>
+<script>
+    // Funkcja dodająca produkt do koszyka w localStorage
+    function addToCart(productId, productName, productPrice) {
+        // Pobierz koszyk z localStorage lub stwórz pusty, jeśli nie istnieje
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Znajdź produkt w koszyku
+        let product = cart.find(p => p.id === productId);
+
+        if (product) {
+            // Jeśli produkt już jest w koszyku, zwiększ ilość
+            product.quantity += 1;
+        } else {
+            // Jeśli produktu nie ma w koszyku, dodaj go
+            cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 });
+        }
+
+        // Zapisz zaktualizowany koszyk w localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Wyświetl potwierdzenie
+        alert("Produkt dodany do koszyka!");
     }
 </script>
