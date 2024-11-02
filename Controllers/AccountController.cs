@@ -79,7 +79,7 @@ namespace UserManagmentApp.Controllers
                 }
             }
 
-            ViewBag.Error = "Invalid login attempt";
+            ViewBag.Error = "Niepoprawne dane logowania.";
             return View();
         }
 

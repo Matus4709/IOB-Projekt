@@ -39,7 +39,7 @@
             <!-- Przyciski: Powrót do listy produktów i ew. inne -->
             <div class="d-flex flex-column">
                 <a href="/products" class="btn btn-secondary mb-2">Powrót do listy produktów</a>
-                <button class="btn btn-primary">Dodaj do koszyka</button>
+                <button class="btn btn-primary" onclick="addToCart('@Model.ProductId', '@Model.ProductName', '@Model.Price')">Dodaj do koszyka</button>
             </div>
         </div>
     </div>
@@ -57,3 +57,29 @@
         object-fit: cover;
     }
 </style>
+
+<script>
+    // Funkcja dodająca produkt do koszyka w localStorage
+    function addToCart(productId, productName, productPrice) {
+        // Pobierz koszyk z localStorage lub stwórz pusty, jeśli nie istnieje
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        // Znajdź produkt w koszyku
+        let product = cart.find(p => p.id === productId);
+
+        if (product) {
+            // Jeśli produkt już jest w koszyku, zwiększ ilość
+            product.quantity += 1;
+        } else {
+            // Jeśli produktu nie ma w koszyku, dodaj go
+            cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 });
+        }
+
+        // Zapisz zaktualizowany koszyk w localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Wyświetl potwierdzenie
+        alert("Produkt dodany do koszyka!");
+        location.reload();
+    }
+</script>

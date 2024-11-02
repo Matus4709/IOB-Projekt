@@ -53,7 +53,7 @@
                                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="showConfirmation('@product.ProductId')">Usuń</button>
                                         }
                                     </div>
-                                    <small class="text-body-secondary">@product.Price PLN</small>
+                                    <small class="text-secondary ps-1">@product.Price PLN</small>
                                 </div>
                             </div>
                         </div>
@@ -140,5 +140,6 @@
 
         // Wyświetl potwierdzenie
         alert("Produkt dodany do koszyka!");
+        location.reload();
     }
 </script>
