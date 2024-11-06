@@ -1,0 +1,104 @@
+﻿@model UserManagmentApp.Models.ProductViewModel
+
+@{
+    ViewData["Title"] = "Koszyk";
+}
+
+<div class="container center ">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 mt-5">
+            <h2 class="">Twój koszyk: </h2>
+            <div class="w-25">
+                <p class="border-bottom w-25 mb-3"></p>
+            </div>
+            <table class="table table-bordered border-dark-subtle">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col" class="fw-bold">ID</th>
+                        <th scope="col" class="fw-bold">Nazwa</th>
+                        <th scope="col" class="fw-bold">Ilość</th>
+                        <th scope="col" class="fw-bold">Cena</th>
+                    </tr>
+                </thead>
+                <tbody id="cart_body">
+                    <!-- Elementy koszyka zostaną tutaj dynamicznie dodane -->
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center text-center mt-4">
+        <div class="col-md-6">
+            <h4 class="mb-3">Podsumowanie:</h4>
+            <span class="fs-5 fw-bold text-primary" id="summary-cart">0 PLN</span>
+            <button id="place-order" class="btn btn-outline-success mt-4 w-100 p-3">Złóż zamówienie!</button>
+        </div>
+    </div>
+</div>
+<script>
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cart_body = document.getElementById('cart_body');
+    let summaryHeader = document.getElementById('summary-cart');
+
+    function displayCartItems() {
+        let summary = 0;
+        cart_body.innerHTML = ""; // Wyczyszczenie zawartości tabeli
+
+        if (cart.length === 0) {
+            cart_body.innerHTML = `<tr><td colspan="4" class="text-center">Koszyk jest pusty</td></tr>`;
+        } else {
+            cart.forEach(item => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.id}</td> <td>${item.name}</td><td>${item.quantity}</td><td>${item.price}</td>`;
+                cart_body.appendChild(tr);
+
+                // Aktualizacja podsumowania
+                summary += parseFloat(item.price) * parseFloat(item.quantity);
+                summaryHeader.innerHTML = `${summary.toLocaleString('pl-PL')} PLN`;
+            });
+        }
+    }
+
+    // Funkcja do przesłania zamówienia do kontrolera
+    async function submitOrder() {
+        if (cart.length === 0) {
+            alert("Koszyk jest pusty.");
+            return;
+        }
+
+        try {
+            const cartItems = cart.map(item => ({
+                ProductId: item.id,  // Upewnij się, że przekazujesz `ProductId` jako liczbę
+                Name: item.name,
+                Price: item.price.replace(',', '.'),  // Zamiana przecinka na kropkę
+                Quantity: item.quantity
+            }));
+            const response = await fetch('/order/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cartItems)
+            });
+
+            if (response.ok) {
+                alert("Zamówienie zostało złożone!");
+                localStorage.removeItem('cart'); // Wyczyść koszyk po złożeniu zamówienia
+                window.location.href = "/order/success"; // Przekierowanie na stronę potwierdzenia
+            } else {
+                alert("Wystąpił błąd podczas składania zamówienia.");
+            }
+        } catch (error) {
+            console.error("Błąd:", error);
+            alert("Wystąpił błąd podczas składania zamówienia.");
+        }
+    }
+
+    // Powiązanie przycisku z funkcją składania zamówienia
+    document.getElementById('place-order').addEventListener('click', submitOrder);
+
+    // Wywołanie funkcji displayCartItems po załadowaniu strony
+    window.onload = displayCartItems;
+
+</script>

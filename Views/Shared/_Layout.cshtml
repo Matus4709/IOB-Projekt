@@ -61,7 +61,7 @@
                                         <!-- Produkty zostaną tutaj dodane przez JavaScript -->
                                     </ul>
                                     <h6 id="summary" class="pt-1"></h6>
-                                    <button id="checkoutButton" class="btn btn-primary mt-2 w-100" style="display: none;">Przejdź do zamówienia</button>
+                                    <a href="/order/cart/" id="checkoutButton" class="btn btn-primary mt-2 w-100" style="display: none;">Przejdź do zamówienia</a>
                                     <button id="clearButton" class="btn btn-danger mt-1 w-100" style="display: none;">Wyczyść</button>
                                 </div>
                             </li>
@@ -133,7 +133,7 @@
                     li.innerHTML = `${item.name} <span style="border: 1px solid green; color:green;" class="badge rounded-pill text-bg-primary">${item.quantity} szt.</span> <br> <p class="lead"><small>${item.price} zł</small></p>`;
                     summary += parseFloat(item.price) * parseFloat(item.quantity);
                     cartItemsContainer.appendChild(li);
-                    summaryHeader.innerHTML = "Suma: <b>"+summary+ "</b> PLN";
+                    summaryHeader.innerHTML = `Suma: ${summary.toLocaleString('pl-PL')} PLN`;
                 });
                 checkoutButton.style.display = 'block'; // Pokaż przycisk, gdy koszyk nie jest pusty
                 clearButton.style.display = 'block';
@@ -151,7 +151,7 @@
 
         // Opcjonalnie, dodaj obsługę przycisku "Przejdź do zamówienia"
         document.getElementById('checkoutButton').addEventListener('click', function () {
-            alert('Przejdź do strony zamówienia!'); // Tutaj można dodać logikę przejścia do strony zamówienia
+            
         });
         clearButton.addEventListener('click', function () { 
             localStorage.clear();

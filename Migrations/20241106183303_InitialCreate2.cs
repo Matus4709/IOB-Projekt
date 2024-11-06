@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace UserManagmentApp.Migrations
+namespace IOBProjekt.Migrations
 {
     /// <inheritdoc />
-    public partial class AddUserPasswordHashing : Migration
+    public partial class InitialCreate2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

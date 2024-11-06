@@ -11,5 +11,7 @@ namespace UserManagmentApp.Data
         }
         public DbSet<User> Users { get; set; } 
         public DbSet<Products> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }
