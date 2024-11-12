@@ -138,12 +138,23 @@ namespace UserManagmentApp.Controllers
         [Route("order/list")]
         public IActionResult OrderList()
         {
-            // Pobranie wszystkich zamówień z bazy danych
-            var orders = _context.Orders.ToList();
+            // Pobranie UserId z sesji
+            var userId = HttpContext.Session.GetInt32("UserId");
 
-            // Przekazanie listy zamówień do widoku
+            // Sprawdzenie, czy użytkownik jest zalogowany
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Przekierowanie do logowania, jeśli nie jest zalogowany
+            }
+
+            // Pobranie zamówień należących tylko do zalogowanego użytkownika
+            var orders = _context.Orders
+                                 .Where(o => o.UserId == userId) // Filtrowanie po UserId
+                                 .ToList();
+
             return View(orders);
         }
+
         [Route("order/details/{orderId}")]
         public IActionResult OrderDetails(int orderId)
         {
