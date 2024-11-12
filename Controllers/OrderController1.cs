@@ -158,14 +158,30 @@ namespace UserManagmentApp.Controllers
         [Route("order/details/{orderId}")]
         public IActionResult OrderDetails(int orderId)
         {
-            // Pobranie szczegółów zamówienia
+            // Pobranie UserId z sesji (lub alternatywnie z tokena/autoryzacji)
+            var userId = HttpContext.Session.GetInt32("UserId");
+
+            // Sprawdzenie, czy użytkownik jest zalogowany
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account"); // Przekierowanie do logowania, jeśli nie jest zalogowany
+            }
+
+            // Pobranie zamówienia z bazy danych
             var order = _context.Orders
                                 .Where(o => o.OrderId == orderId)
                                 .FirstOrDefault();
 
+            // Sprawdzenie, czy zamówienie istnieje
             if (order == null)
             {
                 return NotFound(); // Zwrócenie 404, jeśli zamówienie nie istnieje
+            }
+
+            // Sprawdzenie, czy zamówienie należy do aktualnie zalogowanego użytkownika
+            if (order.UserId != userId)
+            {
+                return Unauthorized(); // Zwrócenie 401, jeśli zamówienie nie należy do użytkownika
             }
 
             // Pobranie danych użytkownika powiązanego z zamówieniem
@@ -189,7 +205,6 @@ namespace UserManagmentApp.Controllers
 
             return View(viewModel);
         }
-
     }
 }
 
