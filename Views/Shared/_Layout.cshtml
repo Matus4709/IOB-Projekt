@@ -36,6 +36,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Dashboard">Dashboard</a>
                             </li>
                         }
+                        @if (userId != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="list">Zamówienia</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/Products">Produkty</a>
                         </li>
